@@ -1,1 +1,41 @@
-*this is a formal language description*
+alphabet: a b 1 0 } \ ,
+
+accepting: qAccept
+
+transitions: {
+    q0 a q2
+    q0 b qq
+    q0 1 qAccept
+    q0 0 q0
+    q0 } q2
+    q0 \ qAccept
+    q0 , qq
+
+    qAccept a qAccept
+    qAccept b q2
+    qAccept 1 qq
+    qAccept 0 q0
+    qAccept } qq
+    qAccept \ q0
+    qAccept , q2
+
+    q2 a qq
+    q2 b qAccept
+    q2 1 q0
+    q2 0 q2
+    q2 } qAccept
+    q2 \ qq
+    q2 , q0
+
+    qq a q0
+    qq b q2
+    qq 1 qAccept
+    qq 0 qq
+    qq } q0
+    qq \ q2
+    qq , qAccept
+}
+
+initial: q0
+
+states: q0 qAccept q2 qq
