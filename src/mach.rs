@@ -11,7 +11,7 @@ impl Node {
     }
 }
 
-pub fn generate_machine() -> Vec<Node>{
+pub fn generate_machine(input: &str) -> Vec<Node>{
     let mut nodes: Vec<Node> = Vec::new();
     let node: Node = Node{
         accept: true,
