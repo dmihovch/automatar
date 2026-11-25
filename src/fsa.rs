@@ -2,14 +2,14 @@ use std::{collections::{HashMap}, error::Error};
 
 struct Transition<'l> {
     state: &'l str,
-    next: &'l str,
+    next: char,
     result: &'l str,
 }
 
 pub struct FSA<'l> {
-    mach: HashMap<(&'l str, &'l str), &'l str>,
+    mach: HashMap<(&'l str, char), &'l str>,
     states: Vec<&'l str>,
-    alpha:Vec<&'l str>,
+    alpha:Vec<char>,
     accepts:Vec<&'l str>,
     initial:&'l str,
 }
@@ -17,7 +17,7 @@ pub struct FSA<'l> {
 impl<'l> FSA<'l> {
     pub fn new(lang:&'l str) -> Result<Self, Box<dyn Error>>{
         let states = Self::parse_single_lines(lang, "states:".into())?;
-        let alpha = Self::parse_single_lines(lang, "alphabet:".into())?;
+        let alpha = Self::parse_alphabet(lang)?;
         let accepts = Self::parse_single_lines(lang, "accepting:".into())?;
         let initial = Self::parse_initial(lang)?;
         let trans = Self::parse_transitions(lang, &states, &alpha)?;
@@ -30,10 +30,33 @@ impl<'l> FSA<'l> {
         })
     }
     
-    pub fn get_machine(&self) -> &HashMap<(&'l str, &'l str), &'l str> {
+    pub fn get_machine(&self) -> &HashMap<(&'l str,char), &'l str> {
        &self.mach 
     }
 
+    pub fn print_machine(&self) {
+        println!("States:");
+        self.states.iter().for_each(|s| println!("{}",s));
+        println!("Alphabet:");
+        self.alpha.iter().for_each(|a| println!("{}",a));
+        println!("Accept States:");
+        self.accepts.iter().for_each(|a| println!("{}",a));
+        println!("Initial State:\n{}",self.initial);
+    }
+    
+    fn parse_alphabet(lang: &'l str) -> Result<Vec<char>, Box<dyn Error>> {
+        let alphabet:Vec<&'l str> = lang
+            .lines()
+            .find_map(|line| line.strip_prefix("alphabet:"))
+            .ok_or("Missing alphabet field")?
+            .split_whitespace()
+            .collect();
+        let mut chalphabet = Vec::new();
+        for a in alphabet {
+            chalphabet.push(a.parse::<char>()?);
+        }
+        Ok(chalphabet)
+    }
     fn parse_single_lines(lang: &'l str, which_elem:&str) -> Result<Vec<&'l str>,Box<dyn Error>> {
         let err_msg = which_elem.char_indices()
             .next_back()
@@ -56,7 +79,7 @@ impl<'l> FSA<'l> {
         Ok(init)
     }
 
-    fn parse_transitions(lang: &'l str, states: &[&'l str], alpha: &[&'l str])-> Result<Vec<Transition<'l>>, Box<dyn Error>>{
+    fn parse_transitions(lang: &'l str, states: &[&'l str], alpha: &[char])-> Result<Vec<Transition<'l>>, Box<dyn Error>>{
         let headers = [
             "states:",
             "alphabet:",
@@ -81,7 +104,7 @@ impl<'l> FSA<'l> {
             }
             let mut parts = line.split_whitespace();
             let state = parts.next().ok_or_else(|| format!("Missing source state in transition: {line}"))?;
-            let next = parts.next().ok_or_else(|| format!("Missing input symbol in transition: {line}"))?;
+            let next = parts.next().ok_or_else(|| format!("Missing input symbol in transition: {line}"))?.parse::<char>()?;
             let result = parts.next().ok_or_else(|| format!("Missing result state in transition: {line}"))?;
             
             if !states.contains(&state) {
@@ -99,5 +122,25 @@ impl<'l> FSA<'l> {
         Err("Missing closing brace for transitions".into())
     } 
 
+    fn report_error_in_string(&self, idx: usize, ch: char ){
+        println!("Invalid character found at index {idx}, character '{ch}'");
+        println!("The string is not in the language");
+    }
+    
+    pub fn evaluate_string(&self, input: &str)-> bool {
+       println!("Processing input string:\n{input}\n========================");
+       let mut next_state = self.initial;
+       for (i, c) in input.char_indices() {
+            match self.mach.get(&(next_state, c)){
+                Some(state) => next_state = state,
+                None => {
+                    self.report_error_in_string(i, c); 
+                    return false;
+                },
+            }
+       }
+       println!("The string is in the language!");
+       true
+    }
 
 }
