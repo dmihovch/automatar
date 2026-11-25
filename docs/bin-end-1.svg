@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="340" viewBox="0 0 720 340" role="img" aria-labelledby="diagram-title diagram-description">
+  <title id="diagram-title">Binary strings ending in one</title>
+  <desc id="diagram-description">q0 is the initial state. q1 is the accepting state. Reading 0 leads to q0 from either state. Reading 1 leads to q1 from either state.</desc>
+  <g fill="#f8fafc" stroke="#64748b" stroke-width="4">
+    <circle cx="175" cy="205" r="100"/>
+    <circle cx="545" cy="205" r="100"/>
+    <circle cx="545" cy="205" r="88"/>
+  </g>
+  <g fill="none" stroke="#64748b" stroke-width="4" stroke-linecap="round">
+    <path d="M 112 126 C 55 20, 295 20, 238 126"/>
+    <path d="M 482 126 C 425 20, 665 20, 608 126"/>
+    <path d="M 272 174 C 330 138, 390 138, 448 174"/>
+    <path d="M 448 236 C 390 272, 330 272, 272 236"/>
+  </g>
+  <g fill="#64748b">
+    <path d="M 238 126 L 238.5 110.3 L 250.8 117 Z"/>
+    <path d="M 608 126 L 608.5 110.3 L 620.8 117 Z"/>
+    <path d="M 448 174 L 432.4 172.6 L 439.8 160.7 Z"/>
+    <path d="M 272 236 L 287.6 237.4 L 280.2 249.3 Z"/>
+  </g>
+  <g font-family="DejaVu Sans, Arial, sans-serif" text-anchor="middle">
+    <g fill="#0f172a" font-size="44">
+      <text x="175" y="220">q0</text>
+      <text x="545" y="220">q1</text>
+    </g>
+    <g fill="#64748b" font-size="32">
+      <text x="175" y="31">0</text>
+      <text x="545" y="31">1</text>
+      <text x="360" y="132">1</text>
+      <text x="360" y="298">0</text>
+    </g>
+  </g>
+</svg>

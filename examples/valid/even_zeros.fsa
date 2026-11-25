@@ -1,0 +1,15 @@
+alphabet: 0 1
+
+accepting: even
+
+transitions: {
+    even 0 odd
+    even 1 even
+
+    odd 0 even
+    odd 1 odd
+}
+
+initial: even
+
+states: even odd

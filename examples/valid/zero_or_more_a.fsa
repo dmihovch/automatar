@@ -1,0 +1,11 @@
+alphabet: a
+
+accepting: q0
+
+transitions: {
+    q0 a q0
+}
+
+initial: q0
+
+states: q0

@@ -1,0 +1,21 @@
+alphabet: a b
+
+accepting: complete
+
+transitions: {
+    start a expect_b
+    start b reject
+
+    expect_b a reject
+    expect_b b complete
+
+    complete a expect_b
+    complete b reject
+
+    reject a reject
+    reject b reject
+}
+
+initial: start
+
+states: start expect_b complete reject
