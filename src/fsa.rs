@@ -30,18 +30,24 @@ impl<'l> FSA<'l> {
         })
     }
     
-    pub fn get_machine(&self) -> &HashMap<(&'l str,char), &'l str> {
-       &self.mach 
-    }
 
     pub fn print_machine(&self) {
-        println!("States:");
-        self.states.iter().for_each(|s| println!("{}",s));
-        println!("Alphabet:");
-        self.alpha.iter().for_each(|a| println!("{}",a));
-        println!("Accept States:");
-        self.accepts.iter().for_each(|a| println!("{}",a));
-        println!("Initial State:\n{}",self.initial);
+        println!("========== Printing Machine Info ==========");
+        print!("States:");
+        self.states.iter().for_each(|s| print!(" {}",s));
+        print!("\nAlphabet:");
+        self.alpha.iter().for_each(|a| print!(" {} ",a));
+        print!("\nAccept States:");
+        self.accepts.iter().for_each(|a| print!(" {} ",a));
+        print!("\nInitial State: {}",self.initial);
+        println!("\nTransitions:");
+        for (state, symbol) in self.mach.keys() {
+            match self.mach.get(&(*state,*symbol)) {
+                Some(nstate) => println!("\t{state}, {symbol} => {nstate}"),
+                None => eprintln!("in print_machine, this should never happen"),
+            }
+        }
+        println!("===========================================")
     }
     
     fn parse_alphabet(lang: &'l str) -> Result<Vec<char>, Box<dyn Error>> {
@@ -128,7 +134,8 @@ impl<'l> FSA<'l> {
     }
     
     pub fn evaluate_string(&self, input: &str)-> bool {
-       println!("Processing input string:\n{input}\n========================");
+       let input = input.trim();
+       println!("Processing input string:\n[{input}]\n-----------------------");
        let mut next_state = self.initial;
        for (i, c) in input.char_indices() {
             match self.mach.get(&(next_state, c)){
@@ -139,8 +146,12 @@ impl<'l> FSA<'l> {
                 },
             }
        }
-       println!("The string is in the language!");
-       true
+       if self.accepts.contains(&next_state){
+           println!("The string is in the language!");
+           return true
+       }
+       println!("The string contains all valid characters, but is not in the language");
+       false
     }
 
 }
