@@ -1,0 +1,21 @@
+alphabet: a b c
+
+accepting: qAccept
+
+transitions: {
+    q0 a q1
+    q0 b q0
+    q0 c q0
+
+    q1 a q1
+    q1 b qAccept
+    q1 c q0
+
+    qAccept a qAccept
+    qAccept b qAccept
+    qAccept c qAccept
+}
+
+initial: q0
+
+states: q0 q1 qAccept
